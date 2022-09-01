@@ -21,7 +21,7 @@ class RestaurantListPage extends StatelessWidget {
         future:
             DefaultAssetBundle.of(context).loadString('assets/restaurant.json'),
         builder: (context, snapshot) {
-          var jsonMap = jsonDecode((snapshot.data ?? []).toString());
+          var jsonMap = jsonDecode(snapshot.data.toString());
           var resto = RestaurantModel.fromJson(jsonMap);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
