@@ -25,12 +25,8 @@ class RestaurantListPage extends StatelessWidget {
           var resto = RestaurantModel.fromJson(jsonMap);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: GridView.builder(
+            child: ListView.builder(
               itemCount: resto.restaurants.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 4 / 4.5,
-              ),
               itemBuilder: (context, index) {
                 return _buildRestoItem(context, resto.restaurants[index]);
               },
@@ -50,72 +46,67 @@ Widget _buildRestoItem(BuildContext context, Restaurant restaurant) {
         Navigator.pushNamed(context, RestaurantDetailPage.routeName,
             arguments: restaurant);
       },
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Hero(
+      child: Column(
+        children: [
+          ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                RestaurantDetailPage.routeName,
+                arguments: restaurant,
+              );
+            },
+            leading: Hero(
               tag: restaurant.pictureId,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
                   restaurant.pictureId,
-                  // height: 100,
-                  width: double.infinity,
+                  height: 150,
                 ),
               ),
             ),
-            const SizedBox(
-              height: 5.0,
+            title: Text(
+              restaurant.name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+            subtitle: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                      color: Colors.redAccent,
+                    ),
                     Text(
-                      restaurant.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on_rounded,
-                          size: 14,
-                          color: Colors.redAccent,
-                        ),
-                        Text(restaurant.city),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star_rounded,
-                          color: Colors.amber,
-                          size: 14,
-                        ),
-                        Text(
-                          restaurant.rating.toString(),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                      restaurant.city,
+                      style: TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
-              ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.star_rounded,
+                      size: 14,
+                      color: Colors.amberAccent,
+                    ),
+                    Text(restaurant.rating.toString()),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 5.0,
+          )
+        ],
       ),
     ),
   );
