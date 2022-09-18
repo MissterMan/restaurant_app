@@ -1,40 +1,106 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/restaurant_detail.dart';
+import 'package:restaurant_app/ui/restaurant_search.dart';
 import '../data/models/restaurant.dart';
 
-class RestaurantListPage extends StatelessWidget {
+class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({Key? key}) : super(key: key);
+
+  @override
+  State<RestaurantListPage> createState() => _RestaurantListPageState();
+}
+
+class _RestaurantListPageState extends State<RestaurantListPage> {
+  final searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildList() {
+    return Consumer<RestoProvider>(
+      builder: (context, state, _) {
+        if (state.state == ResultState.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state.state == ResultState.hasData) {
+          return SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TextFormField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      hintText: 'Cari Restaurant',
+                      filled: true,
+                      fillColor: const Color(0xFFFF5B00),
+                    ),
+                    onFieldSubmitted: (query) {
+                      Navigator.pushNamed(
+                          context, RestaurantSearchPage.routeName,
+                          arguments: query);
+                    },
+                  ),
+                ),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: state.result.restaurants.length,
+                  itemBuilder: (context, index) {
+                    var restaurant = state.result.restaurants[index];
+                    return _buildRestoItem(context, restaurant);
+                  },
+                ),
+              ],
+            ),
+          );
+        } else if (state.state == ResultState.noData) {
+          return Center(
+            child: Material(
+              child: Text(state.message),
+            ),
+          );
+        } else if (state.state == ResultState.error) {
+          return Center(
+            child: Material(
+              child: Text(state.message),
+            ),
+          );
+        } else {
+          return const Center(
+            child: Material(
+              child: Text(''),
+            ),
+          );
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text(
-          'Restaurant',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          elevation: 0,
+          title: const Text(
+            'Restaurant',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: FutureBuilder(
-        future:
-            DefaultAssetBundle.of(context).loadString('assets/restaurant.json'),
-        builder: (context, snapshot) {
-          var jsonMap = jsonDecode(snapshot.data.toString());
-          var resto = RestaurantModel.fromJson(jsonMap);
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: ListView.builder(
-              itemCount: resto.restaurants.length,
-              itemBuilder: (context, index) {
-                return _buildRestoItem(context, resto.restaurants[index]);
-              },
-            ),
-          );
-        },
-      ),
-    );
+        body: _buildList());
   }
 }
 
@@ -55,7 +121,7 @@ Widget _buildRestoItem(BuildContext context, Restaurant restaurant) {
               Navigator.pushNamed(
                 context,
                 RestaurantDetailPage.routeName,
-                arguments: restaurant,
+                arguments: restaurant.id,
               );
             },
             leading: Hero(
@@ -63,7 +129,7 @@ Widget _buildRestoItem(BuildContext context, Restaurant restaurant) {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  restaurant.pictureId,
+                  'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
                   height: 150,
                 ),
               ),

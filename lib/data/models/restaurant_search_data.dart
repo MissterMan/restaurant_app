@@ -1,46 +1,42 @@
 // To parse required this JSON data, do
 //
-//     final restaurantModel = restaurantModelFromJson(jsonString);
+//     final restaurantModelSearch = restaurantModelSearchFromJson(jsonString);
 
 import 'dart:convert';
 
-class RestaurantModel {
-  RestaurantModel({
+class RestaurantModelSearch {
+  RestaurantModelSearch({
     required this.error,
-    required this.message,
-    required this.count,
+    required this.founded,
     required this.restaurants,
   });
 
   bool error;
-  String message;
-  int count;
-  List<Restaurant> restaurants;
+  int founded;
+  List<RestaurantSearch> restaurants;
 
-  factory RestaurantModel.fromRawJson(String str) =>
-      RestaurantModel.fromJson(json.decode(str));
+  factory RestaurantModelSearch.fromRawJson(String str) =>
+      RestaurantModelSearch.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory RestaurantModel.fromJson(Map<String, dynamic> json) =>
-      RestaurantModel(
+  factory RestaurantModelSearch.fromJson(Map<String, dynamic> json) =>
+      RestaurantModelSearch(
         error: json["error"],
-        message: json["message"],
-        count: json["count"],
-        restaurants: List<Restaurant>.from(
-            json["restaurants"].map((x) => Restaurant.fromJson(x))),
+        founded: json["founded"],
+        restaurants: List<RestaurantSearch>.from(
+            json["restaurants"].map((x) => RestaurantSearch.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "error": error,
-        "message": message,
-        "count": count,
+        "founded": founded,
         "restaurants": List<dynamic>.from(restaurants.map((x) => x.toJson())),
       };
 }
 
-class Restaurant {
-  Restaurant({
+class RestaurantSearch {
+  RestaurantSearch({
     required this.id,
     required this.name,
     required this.description,
@@ -56,12 +52,13 @@ class Restaurant {
   String city;
   double rating;
 
-  factory Restaurant.fromRawJson(String str) =>
-      Restaurant.fromJson(json.decode(str));
+  factory RestaurantSearch.fromRawJson(String str) =>
+      RestaurantSearch.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
+  factory RestaurantSearch.fromJson(Map<String, dynamic> json) =>
+      RestaurantSearch(
         id: json["id"],
         name: json["name"],
         description: json["description"],
