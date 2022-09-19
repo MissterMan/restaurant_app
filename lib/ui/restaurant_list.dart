@@ -16,6 +16,7 @@ class RestaurantListPage extends StatefulWidget {
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
   final searchController = TextEditingController();
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -27,8 +28,12 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
     return Consumer<RestoProvider>(
       builder: (context, state, _) {
         if (state.state == ResultState.loading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                Color(0xFFFF5B00),
+              ),
+            ),
           );
         } else if (state.state == ResultState.hasData) {
           return SingleChildScrollView(
@@ -37,21 +42,28 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: TextFormField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                  child: Form(
+                    key: _globalKey,
+                    child: TextFormField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintText: 'Cari Restaurant',
+                        filled: true,
+                        fillColor: const Color(0xFFFF5B00),
                       ),
-                      hintText: 'Cari Restaurant',
-                      filled: true,
-                      fillColor: const Color(0xFFFF5B00),
+                      onFieldSubmitted: (query) {
+                        if (query == null || query.isEmpty) {
+                          return null;
+                        } else {
+                          Navigator.pushNamed(
+                              context, RestaurantSearchPage.routeName,
+                              arguments: query);
+                        }
+                      },
                     ),
-                    onFieldSubmitted: (query) {
-                      Navigator.pushNamed(
-                          context, RestaurantSearchPage.routeName,
-                          arguments: query);
-                    },
                   ),
                 ),
                 ListView.builder(

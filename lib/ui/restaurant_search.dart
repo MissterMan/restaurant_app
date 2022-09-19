@@ -21,7 +21,12 @@ class RestaurantSearchPage extends StatelessWidget {
       child: Consumer<RestoSearchProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                Color(0xFFFF5B00),
+              ),
+            ));
           } else if (state.state == ResultState.hasData) {
             return Scaffold(
               backgroundColor: Colors.white,
@@ -35,27 +40,31 @@ class RestaurantSearchPage extends StatelessWidget {
                   ),
                 ),
               ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'Total restaurant ditemukan: ${state.result.founded.toString()}',
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+              body: SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'Total restaurant ditemukan: ${state.result.founded.toString()}',
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: state.result.restaurants.length,
-                    itemBuilder: (context, index) {
-                      var restaurant = state.result.restaurants[index];
-                      return _buildRestaurantResult(context, restaurant);
-                    },
-                  )
-                ],
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: state.result.restaurants.length,
+                      itemBuilder: (context, index) {
+                        var restaurant = state.result.restaurants[index];
+                        return _buildRestaurantResult(context, restaurant);
+                      },
+                    )
+                  ],
+                ),
               ),
             );
           } else if (state.state == ResultState.noData) {

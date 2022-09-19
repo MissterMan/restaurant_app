@@ -19,7 +19,12 @@ class RestaurantDetailPage extends StatelessWidget {
       child: Consumer<RestoDetailProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                Color(0xFFFF5B00),
+              ),
+            ));
           } else if (state.state == ResultState.hasData) {
             return Scaffold(
               appBar: AppBar(
