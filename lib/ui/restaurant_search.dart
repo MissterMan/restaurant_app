@@ -5,6 +5,7 @@ import 'package:restaurant_app/provider/restaurant_search_provider.dart';
 import 'package:restaurant_app/ui/restaurant_detail.dart';
 
 import '../data/api/api_services.dart';
+import '../util/result_state.dart';
 
 class RestaurantSearchPage extends StatelessWidget {
   static const routeName = '/resto_search';

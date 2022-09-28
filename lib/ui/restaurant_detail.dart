@@ -4,6 +4,7 @@ import 'package:restaurant_app/common/style.dart';
 import 'package:restaurant_app/provider/restaurant_detail_provider.dart';
 
 import '../data/api/api_services.dart';
+import '../util/result_state.dart';
 
 class RestaurantDetailPage extends StatelessWidget {
   static const routeName = '/resto_detail';
@@ -19,9 +20,9 @@ class RestaurantDetailPage extends StatelessWidget {
       child: Consumer<RestoDetailProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
-            return Center(
+            return const Center(
                 child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
+              valueColor: AlwaysStoppedAnimation<Color>(
                 Color(0xFFFF5B00),
               ),
             ));

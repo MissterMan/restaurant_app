@@ -1,11 +1,17 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/ui/favorit_page.dart';
 import 'package:restaurant_app/ui/restaurant_detail.dart';
 import 'package:restaurant_app/ui/restaurant_search.dart';
+import 'package:restaurant_app/ui/setting_page.dart';
+import 'package:restaurant_app/widget/resto_card.dart';
 import '../data/models/restaurant.dart';
+import '../util/result_state.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({Key? key}) : super(key: key);
@@ -17,6 +23,7 @@ class RestaurantListPage extends StatefulWidget {
 class _RestaurantListPageState extends State<RestaurantListPage> {
   final searchController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  final _random = Random();
 
   @override
   void dispose() {
@@ -28,9 +35,9 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
     return Consumer<RestoProvider>(
       builder: (context, state, _) {
         if (state.state == ResultState.loading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
+              valueColor: AlwaysStoppedAnimation<Color>(
                 Color(0xFFFF5B00),
               ),
             ),
@@ -73,7 +80,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                   itemCount: state.result.restaurants.length,
                   itemBuilder: (context, index) {
                     var restaurant = state.result.restaurants[index];
-                    return _buildRestoItem(context, restaurant);
+                    return RestoCard(restaurant: restaurant);
                   },
                 ),
               ],
@@ -106,7 +113,26 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          foregroundColor: Colors.black,
           elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, FavoritPage.routeName);
+              },
+              icon: const Icon(
+                Icons.favorite_border,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SettingsPage.routeName);
+              },
+              icon: const Icon(
+                Icons.settings_outlined,
+              ),
+            )
+          ],
           title: const Text(
             'Restaurant',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -114,78 +140,4 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         ),
         body: _buildList());
   }
-}
-
-Widget _buildRestoItem(BuildContext context, Restaurant restaurant) {
-  return Padding(
-    padding: const EdgeInsets.all(5),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, RestaurantDetailPage.routeName,
-            arguments: restaurant);
-      },
-      child: Column(
-        children: [
-          ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                RestaurantDetailPage.routeName,
-                arguments: restaurant.id,
-              );
-            },
-            leading: Hero(
-              tag: restaurant.pictureId,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
-                  height: 150,
-                ),
-              ),
-            ),
-            title: Text(
-              restaurant.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Column(
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      size: 14,
-                      color: Colors.redAccent,
-                    ),
-                    Text(
-                      restaurant.city,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.star_rounded,
-                      size: 14,
-                      color: Colors.amberAccent,
-                    ),
-                    Text(restaurant.rating.toString()),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 5.0,
-          )
-        ],
-      ),
-    ),
-  );
 }

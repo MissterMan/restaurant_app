@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 
-enum ResultState { loading, noData, hasData, error }
+import '../util/result_state.dart';
 
 class RestoSearchProvider extends ChangeNotifier {
   late final ApiService apiService;
