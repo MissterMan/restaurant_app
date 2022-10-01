@@ -66,8 +66,39 @@ class RestaurantSearchPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return Consumer<RestoProvider>(
                           builder: (context, state, _) {
-                            return RestoCard(
-                                restaurant: state.result.restaurants[index]);
+                            if (state.state == ResultState.loading) {
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFFFF5B00),
+                                ),
+                              ));
+                            } else if (state.state == ResultState.hasData) {
+                              return RestoCard(
+                                  restaurant: state.result.restaurants[index]);
+                            } else if (state.state == ResultState.noData) {
+                              return Center(
+                                child: Material(
+                                  child: Scaffold(
+                                    body: Center(
+                                      child: Text(state.message),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else if (state.state == ResultState.error) {
+                              return Center(
+                                child: Material(
+                                  child: Scaffold(
+                                    body: Center(
+                                      child: Text(state.message),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return const Text('');
+                            }
                           },
                         );
                       },
