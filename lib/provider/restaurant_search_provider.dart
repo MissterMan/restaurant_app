@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 
+import '../data/models/restaurant.dart';
 import '../util/result_state.dart';
 
 class RestoSearchProvider extends ChangeNotifier {
@@ -46,7 +47,7 @@ class RestoSearchProvider extends ChangeNotifier {
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();
-      return _message = 'Error --> $e';
+      return _message = 'Error HALOO --> $e';
     }
   }
 }

@@ -74,7 +74,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                   ),
                 ),
                 ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: state.result.restaurants.length,

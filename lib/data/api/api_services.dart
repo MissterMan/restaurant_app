@@ -9,21 +9,13 @@ import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 import '../exception.dart';
 
 class ApiService {
-  static const String _baseUrl = 'https://restaurant-api.dicoding.dev/';
-  static const String _restoList = 'list';
-  static const String _restoDetail = 'detail/';
-
   Future<RestaurantModel> restoList() async {
     final response =
         await http.get(Uri.parse('https://restaurant-api.dicoding.dev/list'));
-    try {
+    if (response.statusCode == 200) {
       return RestaurantModel.fromJson(json.decode(response.body));
-    } on SocketException {
-      throw NoInternetException('No Internet');
-    } on HttpException {
-      throw NoServiceException('No Service Found');
-    } catch (e) {
-      throw UnknownException('Unknown Exception');
+    } else {
+      throw Exception('Failed to load restaurant list');
     }
   }
 

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/style.dart';
+import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:restaurant_app/data/models/restaurant_detail_data.dart';
 import 'package:restaurant_app/data/preferences/preferences_helper.dart';
 import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/preferences_provider.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/provider/scheduling_provider.dart';
 import 'package:restaurant_app/ui/favorit_page.dart';
 import 'package:restaurant_app/ui/home_page.dart';
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<DatabaseProvider>(
             create: (_) => DatabaseProvider(databaseHelper: DatabaseHelper())),
+        ChangeNotifierProvider<RestoProvider>(
+            create: (_) => RestoProvider(apiService: ApiService())),
         ChangeNotifierProvider<SchedulingProvider>(
             create: (_) => SchedulingProvider()),
         ChangeNotifierProvider<PreferencesProvider>(
@@ -84,7 +88,9 @@ class MyApp extends StatelessWidget {
         routes: {
           HomePage.routeName: (context) => HomePage(),
           RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
-                id: ModalRoute.of(context)?.settings.arguments as String,
+                // id: ModalRoute.of(context)?.settings.arguments as String,
+                restaurant:
+                    ModalRoute.of(context)?.settings.arguments as Restaurant,
               ),
           RestaurantSearchPage.routeName: (context) => RestaurantSearchPage(
                 query: ModalRoute.of(context)?.settings.arguments as String,

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/common/navigation.dart';
+import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 import 'package:restaurant_app/provider/restaurant_search_provider.dart';
 import 'package:restaurant_app/ui/restaurant_detail.dart';
+import 'package:restaurant_app/widget/resto_card.dart';
 
 import '../data/api/api_services.dart';
+import '../provider/restaurant_provider.dart';
 import '../util/result_state.dart';
 
 class RestaurantSearchPage extends StatelessWidget {
@@ -22,9 +26,9 @@ class RestaurantSearchPage extends StatelessWidget {
       child: Consumer<RestoSearchProvider>(
         builder: (context, state, _) {
           if (state.state == ResultState.loading) {
-            return Center(
+            return const Center(
                 child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
+              valueColor: AlwaysStoppedAnimation<Color>(
                 Color(0xFFFF5B00),
               ),
             ));
@@ -60,8 +64,12 @@ class RestaurantSearchPage extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: state.result.restaurants.length,
                       itemBuilder: (context, index) {
-                        var restaurant = state.result.restaurants[index];
-                        return _buildRestaurantResult(context, restaurant);
+                        return Consumer<RestoProvider>(
+                          builder: (context, state, _) {
+                            return RestoCard(
+                                restaurant: state.result.restaurants[index]);
+                          },
+                        );
                       },
                     )
                   ],
@@ -116,11 +124,8 @@ Widget _buildRestaurantResult(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                RestaurantDetailPage.routeName,
-                arguments: restaurant.id,
-              );
+              Navigator.pushNamed(context, RestaurantDetailPage.routeName,
+                  arguments: restaurant);
             },
             leading: Hero(
               tag: restaurant.pictureId,
