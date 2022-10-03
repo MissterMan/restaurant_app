@@ -64,43 +64,8 @@ class RestaurantSearchPage extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: state.result.restaurants.length,
                       itemBuilder: (context, index) {
-                        return Consumer<RestoProvider>(
-                          builder: (context, state, _) {
-                            if (state.state == ResultState.loading) {
-                              return const Center(
-                                  child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFFFF5B00),
-                                ),
-                              ));
-                            } else if (state.state == ResultState.hasData) {
-                              return RestoCard(
-                                  restaurant: state.result.restaurants[index]);
-                            } else if (state.state == ResultState.noData) {
-                              return Center(
-                                child: Material(
-                                  child: Scaffold(
-                                    body: Center(
-                                      child: Text(state.message),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else if (state.state == ResultState.error) {
-                              return Center(
-                                child: Material(
-                                  child: Scaffold(
-                                    body: Center(
-                                      child: Text(state.message),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return const Text('');
-                            }
-                          },
-                        );
+                        return _buildRestaurantResult(
+                            context, state.result.restaurants[index]);
                       },
                     )
                   ],
@@ -144,70 +109,64 @@ Widget _buildRestaurantResult(
     BuildContext context, RestaurantSearch restaurant) {
   return Padding(
     padding: const EdgeInsets.all(5),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, RestaurantDetailPage.routeName,
-            arguments: restaurant);
-      },
-      child: Column(
-        children: [
-          ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-            onTap: () {
-              Navigator.pushNamed(context, RestaurantDetailPage.routeName,
-                  arguments: restaurant);
-            },
-            leading: Hero(
-              tag: restaurant.pictureId,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
-                  height: 150,
-                ),
+    child: Column(
+      children: [
+        ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          onTap: () {
+            Navigator.pushNamed(context, RestaurantDetailPage.routeName,
+                arguments: restaurant);
+          },
+          leading: Hero(
+            tag: restaurant.pictureId,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
+                height: 150,
               ),
-            ),
-            title: Text(
-              restaurant.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Column(
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      size: 14,
-                      color: Colors.redAccent,
-                    ),
-                    Text(
-                      restaurant.city,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.star_rounded,
-                      size: 14,
-                      color: Colors.amberAccent,
-                    ),
-                    Text(restaurant.rating.toString()),
-                  ],
-                ),
-              ],
             ),
           ),
-          const SizedBox(
-            height: 5.0,
-          )
-        ],
-      ),
+          title: Text(
+            restaurant.name,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Column(
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on_rounded,
+                    size: 14,
+                    color: Colors.redAccent,
+                  ),
+                  Text(
+                    restaurant.city,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.star_rounded,
+                    size: 14,
+                    color: Colors.amberAccent,
+                  ),
+                  Text(restaurant.rating.toString()),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 5.0,
+        )
+      ],
     ),
   );
 }
