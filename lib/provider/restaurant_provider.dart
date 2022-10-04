@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
+import 'package:http/http.dart' as http;
 
 import '../data/api/api_services.dart';
 import '../util/result_state.dart';
@@ -27,7 +28,7 @@ class RestoProvider extends ChangeNotifier {
     try {
       _state = ResultState.loading;
       notifyListeners();
-      final restaurantList = await apiService.restoList();
+      final restaurantList = await apiService.restoList(http.Client());
       if (restaurantList.restaurants.isEmpty) {
         _state = ResultState.noData;
         notifyListeners();

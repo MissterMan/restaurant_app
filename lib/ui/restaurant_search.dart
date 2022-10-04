@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/common/navigation.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 import 'package:restaurant_app/provider/restaurant_search_provider.dart';
 import 'package:restaurant_app/ui/restaurant_detail.dart';
-import 'package:restaurant_app/widget/resto_card.dart';
 
 import '../data/api/api_services.dart';
-import '../provider/restaurant_provider.dart';
 import '../util/result_state.dart';
 
 class RestaurantSearchPage extends StatelessWidget {
@@ -116,7 +113,13 @@ Widget _buildRestaurantResult(
               const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           onTap: () {
             Navigator.pushNamed(context, RestaurantDetailPage.routeName,
-                arguments: restaurant);
+                arguments: Restaurant(
+                    id: restaurant.id,
+                    city: restaurant.city,
+                    description: restaurant.id,
+                    name: restaurant.name,
+                    rating: restaurant.rating,
+                    pictureId: restaurant.pictureId));
           },
           leading: Hero(
             tag: restaurant.pictureId,

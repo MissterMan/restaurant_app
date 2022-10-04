@@ -1,16 +1,13 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/favorit_page.dart';
-import 'package:restaurant_app/ui/restaurant_detail.dart';
 import 'package:restaurant_app/ui/restaurant_search.dart';
 import 'package:restaurant_app/ui/setting_page.dart';
 import 'package:restaurant_app/widget/resto_card.dart';
-import '../data/models/restaurant.dart';
+
 import '../util/result_state.dart';
 
 class RestaurantListPage extends StatefulWidget {

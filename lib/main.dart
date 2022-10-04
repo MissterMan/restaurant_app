@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/common/style.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
-import 'package:restaurant_app/data/models/restaurant_detail_data.dart';
 import 'package:restaurant_app/data/preferences/preferences_helper.dart';
 import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/preferences_provider.dart';

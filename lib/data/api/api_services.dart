@@ -1,15 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:http/http.dart' as http;
+import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:restaurant_app/data/models/restaurant_detail_data.dart';
 import 'package:restaurant_app/data/models/restaurant_search_data.dart';
 
-import '../exception.dart';
-
 class ApiService {
-  Future<RestaurantModel> restoList() async {
+  Future<RestaurantModel> restoList(http.Client client) async {
     final response =
         await http.get(Uri.parse('https://restaurant-api.dicoding.dev/list'));
     if (response.statusCode == 200) {

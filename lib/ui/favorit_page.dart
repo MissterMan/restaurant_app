@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/db/db_helper.dart';
 import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/widget/resto_card.dart';
 
